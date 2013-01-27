@@ -15,64 +15,83 @@ Actual info/manual: http://wiki.nette.org/cs/cookbook/zprovozneni-prekladace-net
 
 app/config/services.neon:
 ```neon
-	services:
-		translator:
-			factory: \Kappa\Localization\Translator\Gettext::getTranslator
-			setup:
-				- addFile(%appDir%/lang, front) # at leas one file required
-				- Kappa\Localization\Translator\Panel::register # panel to debug bar
+services:
+	translator:
+		factory: \Kappa\Localization\Translator\Gettext::getTranslator
+		setup:
+			- addFile(%appDir%/lang, front) # at leas one file required
+			- Kappa\Localization\Translator\Panel::register # panel to debug bar
 ```
 
 ### 2. Use in templates
 
-default.latte:
+template
 
-	{_"Dog"}
-	{_"Cat", $number} // for plural, default are Czech plurals: 1, 2-4, 5+
-
+```smarty
+{_"Dog"}
+{_"Cat", $number} // for plural, default are Czech plurals: 1, 2-4, 5+
+```
 
 ### 3. Use in forms
+```php
+
+/**
+ * @autowire
+ * @var \Kappa\Localization\Translator\Gettext
+ */
+protected $translator;
+
+createComponentMyForm ()
+{
+	$form = new Form;
+	// ...
+	$form->setTranslator($this->translator);
+}
 
 app/[*Module/ (presenters/)]BasePresenter.php
 
 ```php
-	/**
-	 * @persistent
-	 */
-	public $lang;
+/**
+ * @persistent
+ */
+public $lang;
 
-	/**
-	 * @autowire
-	 * @var \Kappa\Localization\Translator\Gettext
-	 */
-	protected $translator;
+/**
+ * @autowire
+ * @var \Kappa\Localization\Translator\Gettext
+ */
+protected $translator;
 
-	/**
-	 * @autowire
-	 * @var \Nette\Http\Request
-	 */
-	protected $request;
+/**
+ * @autowire
+ * @var \Nette\Http\Request
+ */
+protected $request;
 
-	public function startup()
+public function startup()
+{
+	parent::startup();
+	if (!$this->lang)
 	{
-		parent::startup();
-
-		if (!$this->lang) {
-			$lang = $this->request->detectLanguage(array('en', 'cs')) ?: 'cs';
-			$this->redirectUrl($lang);
-		}
-
+		$lang = $this->request->detectLanguage(array('en', 'cs')) ?: 'cs';
+		$this->redirectUrl($lang);
 	}
+}
 
-	/**
-	 * @param null $class
-	 * @return \Nette\Templating\ITemplate
-	 */
-	public function createTemplate($class = NULL)
-	{
-		$template = parent::createTemplate($class);
-		$this->translator->setLang($this->lang); // set lang
-		$template->setTranslator($this->translator);
-		return $template;
-	}
+/**
+ * @param null $class
+ * @return \Nette\Templating\ITemplate
+ */
+public function createTemplate($class = NULL)
+{
+	$template = parent::createTemplate($class);
+	$this->translator->setLang($this->lang); // set lang
+	$template->setTranslator($this->translator);
+	return $template;
+}
+```
+
+###Route:
+```php
+$router[] = new Route('<lang=cs>/<presenter>/<action>[/<id>]', 'Homepage:default');
 ```
