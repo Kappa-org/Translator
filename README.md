@@ -49,7 +49,7 @@ createComponentMyForm ()
 }
 ```
 
-###4. USe in Presenters
+###4. Use in Presenters
 
 app/[*Module/ (presenters/)]BasePresenter.php
 
