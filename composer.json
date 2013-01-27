@@ -1,0 +1,32 @@
+{
+	"name": "kappa/translator",
+	"type":"library",
+        "description": "Simple and intelligent system for translate appliaction",
+        "keywords": ["framework", "Nette", "Kappa", "Translate", "localization", "gettext"],
+        "homepage": "https://github.com/Kappa-org/Translator",
+        "license": "",
+
+        "authors": [{
+		"name": "Ondřej Záruba",
+                "homepage": "http://zaruba-ondrej.cz/"
+        }],
+
+        "support":{
+                "email":"zarubaondra@gmail.com",
+                "issues":"https://github.com/Kappa-org/Translator/issues"
+        },
+
+	"require":{
+		"php": ">= 5.3.0",
+		"nette/nette":"dev-master",
+		"kappa/framework":"dev-master"
+	},
+
+	"config": {
+		"vendor-dir": "libs"
+	},
+
+	"autoload": {
+                "psr-0": {"Kappa": "./"}
+        }
+}
