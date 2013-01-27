@@ -47,6 +47,9 @@ createComponentMyForm ()
 	// ...
 	$form->setTranslator($this->translator);
 }
+```
+
+###In Presentrs
 
 app/[*Module/ (presenters/)]BasePresenter.php
 
